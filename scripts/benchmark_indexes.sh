@@ -38,7 +38,9 @@ time_query() {
 declare -A before after
 drop_indexes
 for q in "${QUERIES[@]}"; do before[$q]=$(time_query "$q"); done
-"${MYSQL[@]}" < sql/04_indexes.sql
+# An index that backs a foreign key cannot be dropped, so it may still exist: ignore
+# "Duplicate key name" and create the rest.
+"${MYSQL[@]}" --force < sql/04_indexes.sql 2>&1 | grep -v "Duplicate key name" >&2 || true
 for q in "${QUERIES[@]}"; do after[$q]=$(time_query "$q"); done
 
 {
