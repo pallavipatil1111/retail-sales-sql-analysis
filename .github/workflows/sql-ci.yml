@@ -1,0 +1,58 @@
+name: SQL CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  run-analysis:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate the sample dataset
+        run: python data/generate_data.py
+
+      - name: Allow LOAD DATA LOCAL
+        run: mysql -h 127.0.0.1 -u root -proot -e "SET GLOBAL local_infile = 1;"
+
+      - name: Build schema, load data, run all 20 queries
+        run: ./scripts/run_all.sh
+
+      - name: Check every query returned rows
+        run: |
+          for f in results/*.csv; do
+            rows=$(($(wc -l < "$f") - 1))
+            if [ "$rows" -lt 1 ]; then echo "::error::$f returned no rows"; exit 1; fi
+          done
+          echo "All queries returned data."
+
+      - name: Benchmark indexes
+        run: ./scripts/benchmark_indexes.sh
+
+      - name: Upload query results
+        uses: actions/upload-artifact@v4
+        with:
+          name: query-results
+          path: results/

@@ -1,0 +1,13 @@
+store_name,region,store_type,orders,revenue,margin_pct,overall_rank,rank_in_region
+Mumbai Mall,West,Mall,2455,23718459.55,17.55,1,1
+Delhi Mall,North,Mall,2407,23023646.65,17.68,2,1
+Hyderabad Mall,South,Mall,2385,22437888.40,17.54,3,1
+Bengaluru Mall,South,Mall,2377,22086843.30,17.91,4,2
+Pune Mall,West,Mall,2406,21083074.70,17.83,5,2
+Chennai High Street,South,High Street,1476,13519796.05,17.25,6,3
+Kolkata High Street,East,High Street,1520,13505068.35,17.89,7,1
+Jaipur High Street,North,High Street,1463,13371560.30,17.07,8,2
+Ahmedabad High Street,West,High Street,1497,12824964.40,18.43,9,3
+Kochi Express,South,Express,912,8326772.10,18.51,10,4
+Nagpur Express,West,Express,906,8184378.35,18.13,11,4
+Lucknow Express,North,Express,903,8154002.15,18.06,12,3
