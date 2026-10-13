@@ -49,6 +49,7 @@ jobs:
           echo "All queries returned data."
 
       - name: Benchmark indexes
+        timeout-minutes: 10
         run: ./scripts/benchmark_indexes.sh
 
       - name: Upload query results
